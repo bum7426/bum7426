@@ -5,3 +5,4 @@ bin
 *.cd
 Assembly-CSharp.csproj
 Library
+*.apk
