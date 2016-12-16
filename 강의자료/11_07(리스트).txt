@@ -1,0 +1,58 @@
+1107 리스트
+
+선형자료구조 : 스택, 큐, 리스트
+비선형자료구조...
+
+선형리스트 : 물리적으로 선형 ( 배열의 크기가 유동적 )
+연결리스트 : 논리적으로 연결해서 선형구조를 띄는 리스트
+
+선형리스트
+Capasity 허용량
+m_Data;
+m_Size;
+public int m_Capasyty
+{
+	get { return m_Data.Length; }
+}
+
+PushBack(int _Data)
+PopBack()
+
+public int this[int _Index] //인덱서
+{
+	get { return m_Data[_Index]; }
+	set { m_Data[_Index] = value; }
+}
+
+//노드 : 자료의 최소단위, 데이터와 연결부
+Class Node
+{
+	int m_Data;
+	Node m_Next;
+	Node m_prev;
+}
+
+linked list는 임의접근이 불가능. 
+중간 삽입, 삭제가 용이함.
+
+public void PushFront(int _data){}
+public void PushBack(int _data){}
+public void PushSelectFront(int _data){}
+public void PushSelectBack(int _data){}
+public void PopFront(){}
+public void PopBack(){}
+
+//인덱스, 데이터 등등의 조건으로 제거
+public void PopSelect(int _index){}
+public void PopSelectFront(int _index){}
+public void PopSelectBack(int _index){}
+public void Clear(){}//올삭제
+
+//맨 앞, 뒤에 있는 데이터
+public int Front() {}
+public int Back() {}
+
+연결리스트
+장점 :  삽입과 삭제에 대한 오버헤드가 부족
+단점 :  메모리 단편화에 대한 부작용이 생김
+	실제 여유 공간보다 활용할 수 있는 공간이 적어짐

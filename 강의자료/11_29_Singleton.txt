@@ -1,0 +1,234 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+/*
+* Singleton
+  - 객체가 프로젝트에 하나만 존재해야 할 경우
+  - 관리 객체, 매니저, 공용데이터 : 관리 주체를 사용할 때
+
+* 장점
+  - 객체 1 : 코드적으로 객체 생성을[제어] 한다.자원관리
+
+  [다른언어에 대해]
+  - 전역데이터 : 참조에 대한 관리가 되지 않는다.
+
+  - 사용처 확대 : 유연성이 높다. 다 객체로 변환이 가능하기 때문에 차후에 코드를 유연하게 변경 가능
+
+* Singleton 의 구현
+    1. 직접구현
+    2. 상속구현
+
+* Singleton의 종류
+    정적변수사용
+    동적변수사용
+
+
+* C# 
+    static 클래스는 객체 선언이 되지 않음
+    클래스명.멤버명
+
+    static class 클래스명
+    {
+        멤버는 모두 static으로 써줘야함.
+    }
+
+* 유니티 싱글턴
+    1. 기존과 같은 형태의 싱글턴
+    2. 게임 오브젝트로 만드는 싱글턴 -> 싱글턴을 가지고 있는 정보들을 인스펙터창에서 볼 수 있음
+
+
+    */
+//용량의 효율적 사용
+public class Singleton
+{
+    //유일한 객체
+    private static Singleton m_Instance = null;
+
+    public static Singleton Instance
+    {
+        get
+        {
+            if(m_Instance == null)
+            {
+                m_Instance = new Singleton();
+            }
+            return m_Instance;
+        }
+    }
+    //다 생성 불가
+    private Singleton(){}
+    //////////////////////////////////////////////////////////
+    public int m_Data = 0;
+}
+
+//구현의 효율성
+public class SingletonB
+{
+    //유일한 객체
+    private static SingletonB m_Instance = new SingletonB();
+
+    public static SingletonB Instance
+    {
+        get
+        {
+            return m_Instance;
+        }
+    }
+    //다 생성 불가
+    private SingletonB() { }
+    //////////////////////////////////////////////////////////
+    public int m_Data = 0;
+
+}
+
+public class SingletonC //쓰레드
+{
+    //동기화 체크
+    private static object m_SyncRoot;
+    //유일한 객체
+    private static SingletonC m_Instance = null;
+
+    public static SingletonC Instance
+    {
+        get
+        {
+            if (m_Instance == null)
+            {
+                //병렬프로그래밍에서 다중생성을 방지하기 위함 
+                //병렬 프로그래밍에선 락을 최소로 줄여 써야함. 안그러면 직렬이 됨.
+                lock (m_SyncRoot) 
+                {
+                    if(m_Instance == null)
+                    {
+                        m_Instance = new SingletonC();
+                    }
+                }                
+            }
+            return m_Instance;
+        }
+    }
+    //다 생성 불가
+    private SingletonC() { }
+    //////////////////////////////////////////////////////////
+    public int m_Data = 0;
+}
+
+public class Singleton<T> where T : class
+{
+    private static object   m_SyncRoot = new object();
+    private static T        m_Instance = null;
+
+    public static T Instance
+    {
+        get
+        {
+            if(m_Instance == null)
+            {
+                lock(m_SyncRoot)
+                {
+                    if(m_Instance == null)
+                    {
+                        m_Instance = (T)Activator.CreateInstance(typeof(T), true);
+                    }
+                }
+            }
+            return m_Instance;
+        }
+    }
+}
+
+public class Sample : Singleton<Sample>
+{
+    public int m_Data = 20;
+
+    private Sample() { }
+}
+
+namespace 싱글톤
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            SingletonB.Instance.m_Data = 100;
+            Sample.Instance.m_Data = 100;
+
+            //Sample      Temp = new Sample();
+            //SingletonB TempB = new SingletonB();
+        }
+    }
+
+
+
+using UnityEngine;
+using System.Collections;
+
+using System.Collections.Generic;
+
+
+
+public class GenericSingleton<T> :MonoBehaviour where T : MonoBehaviour
+{
+    private static object m_SyncRoot = new object();
+    
+    private static T m_Instance;
+    public static T Instance
+    {
+        get
+        {
+            if (m_Instance == null)
+            {
+                lock (m_SyncRoot)
+                {
+                    if (m_Instance == null)
+                    {                        
+                        GameObject Obj = new GameObject();
+                        Obj.name = "SingletonObject";
+                        m_Instance = Obj.AddComponent<T>();
+
+                        //씬 전환시 객체 유지
+                        DontDestroyOnLoad(Obj);
+                    }
+                }
+            }
+            return m_Instance;
+        }
+    }
+}
+
+
+
+public class Singleton : MonoBehaviour
+{
+    
+     private static object m_SyncRoot = new object();
+    
+     private static Singleton m_Instance;
+    
+     public static Singleton Instance
+    {
+        get
+        {
+            if(m_Instance == null)
+            {
+                lock(m_SyncRoot)
+                {
+                    if (m_Instance == null)
+                    {
+                        GameObject Obj = new GameObject();
+                        Obj.name = "SingletonObject";
+                        m_Instance = Obj.AddComponent<Singleton>();
+
+                        //씬 전환시 객체 유지
+                        DontDestroyOnLoad(Obj);
+                    }
+                }                
+            }
+            return m_Instance;
+        }
+    }
+
+	

@@ -1,0 +1,189 @@
+
+/*
+    * 예외처리 - try, catch, throw*
+     - 코드 상 오류 발생시에 에러처리구문이 발동하는 문법
+     - 스택 되감기라는 표현을 씀.
+     - try를 쓰는것만으로도 부담이 커짐. 기본적으로 성능을 지향하는 곳에서는 최소한의 사용을 추구함.
+     - 예외가 일어날 수 있다는것을 포함하고 있어 긴장하고 있기 때문에 코드가 커지고 부담이 늘어남.
+     - 강제 정지되는 것을 막아줌
+        
+    장점 - 코드의 안정성과 가독성이 높아진다.  안정성과 가독성은 프로그램에서 매우 중요한 부분이기 때문에 효율적으로 사용해야함.
+    단점 - 코드의 효율성은 떨어진다. ( 예외 처리를 위한 코드가 내포되기 때문 )
+
+    - 인스턴스 : 실제 할당된 물리적 메모리
+
+    - 상위에 관련된 에러는 밑에 써줘야함 ex)Exception이 최상위 에러처리구문이므로 맨 아래 써줘야함.
+
+    1. 코드의 용량 : 코드의 용량이 아무리 커져봐야 별로 안 커짐
+    2. 속도 : 느리긴 하지만 1프레임마다 호출되는 정말 많이 호출되는 개체들을 제외하고는 
+              이런거 트라이 하나 없애는거보다 그림 하나 더 렌더하지 않은것이 더 빠름
+    결론 : 필요한 곳에서 적재적소에 사용할 줄 알아야한다.    
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    델리게이트 - 메서드 실행 목록 저장소 , 메소드에 대한 참조
+    public delegate void CalcDelegate(int _NumA, int _NumB); 델리게이트 "자료형" 정의
+    public delegate void OutputDelegate();
+
+    - 매서드를 변수처럼 사용할 수 있음.
+        static void Output(delegate _Out);
+
+    실시간으로 추가하고 제거하는 것이 가능
+
+    이벤트는 외부 실행을 불가하게 해놈. 델리게이트와의 차이. 다른건 다 똑같음
+    이벤트는 외부에서 넣거나 빼거나 할 수 밖에 없음.
+    이벤트 : 특정 상황에서 실행
+    쉽게 말해 더 특수하게 만들어 놓은것. 클래스 내부에서만 실행가능
+
+    인터페이스에서 일반 델리게이트는 선언 불가
+    이벤트 델리게이트는 가능
+
+    이벤트 프로퍼티 add, remove 둘다 작성해주어야함
+
+    *무명메소드*
+    - 맨 위에 델리게이트 식이 있어야함. 한번만 사용하거나 딱히 메서드를 정의해주지 않아도 될 때
+    Temp = delegate (매개변수) -> 매개변수 타입을 써주어야함
+    {
+        //내용
+    };
+
+    장점 : 무명메서드를 정의하는 곳에 있는 상위의 변수들을 전부 활용할 수 있음. 매개변수를 따로 지정하지 않아도됨.
+           일반메서드의 기능을 모두 가지고 있으면서도 해당 메서드의 상위멤버들을 활용할 수 있음.
+           이름은 델리게이트일 뿐이고 메서드와 같음
+
+    단점 : 델리게이트 정의가 필수로 요구됨.
+
+    * 반환값이 없는건 Action
+      Action<int(매개변수)>
+
+    * 반환값이 있는건 Func
+      Func<int, int, int>
+      마지막것이 반환타입(값) Func<int>면 매개변수는 없고 반환값만 있는것
+
+    *람다식*
+    Temp = (매개변수) => { body }; 한줄로 써도됨 (매개변수) => body; -> 매개변수 타입을 안써주어도됨. 형에 대해 자유로움 (익명메서드에서 일반화를 포함)
+                                                                     -> 델리게이트의 상위호환
+
+                                                                      
+    ----------------------* 정리 *-------------------------
+    항목        ㅣ    익명메서드               람다식     ㅣ
+    -------------------------------------------------------
+    버전        ㅣ   C#(.Net)2.0            C#(.Net)3.0   ㅣ
+    매개변수    ㅣ     형 지정              형 생략 가능  ㅣ
+    중괄호      ㅣ      필수                   선택       ㅣ
+    문법        ㅣ  delegate(int a){}       (a) => body   ㅣ
+    지역변수사용ㅣ    사용 가능               사용 가능   ㅣ
+    일반화      ㅣ    사용 불가               항상 지원   ㅣ
+    ------------------------------------------------------- 
+
+*/
+public delegate void CalcDelegate(int _NumA, int _NumB);
+public delegate void OutputDelegate();
+delegate int Compare<T>(T a, T b);
+class Program
+{        
+    static void Add(int _NumA, int _NumB)
+    {
+        Console.WriteLine(_NumA + _NumB);
+    }
+    static void Sub(int _NumA, int _NumB)
+    {
+        Console.WriteLine(_NumA - _NumB);
+    }
+
+
+    //public void Output(Delegate _Out);
+
+    static void Song()
+    {
+        Console.WriteLine("라라랄라라라라랄");
+    }
+
+    static int AscendComparer<T>(T a, T b) where T : IComparable<T>
+    {
+        //if (a > b)          return  1;
+        //else if (a == b)    return  0;
+        //else                return -1;
+
+        return a.CompareTo(b);
+    }
+
+    static int DescendCompare<T>(T a, T b) where T : IComparable<T>
+    {
+        //if      (a < b)     return  1;
+        //else if (a == b)    return  0;
+        //else                return -1;
+
+        return b.CompareTo(a);
+    }
+
+    static void BubbleSort<T>(T[] DataSet, Compare<T> Comparer)
+    {
+        T temp;
+
+        for(int i = 0; i<DataSet.Length -1; i++)
+        {
+            for(int j=0; j<DataSet.Length - (i+1); j++)
+            {
+                if(Comparer(DataSet[j], DataSet[j+1]) > 0)
+                {
+                    temp = DataSet[j + 1];
+                    DataSet[j + 1] = DataSet[j];
+                    DataSet[j] = temp;
+                }
+            }
+        }
+    }
+
+    static void Main(string[] args)
+    {
+        int[] array = { 3, 7, 4, 2, 10 };
+
+        BubbleSort(array, AscendComparer);
+        for (int i = 0; i < array.Length; i++)
+            Console.Write("{0} ", array[i]);
+
+        Console.WriteLine();
+        Console.WriteLine();
+
+        BubbleSort(array, (a,b) => b.CompareTo(a));    
+        for (int i = 0; i < array.Length; i++)
+            Console.Write("{0} ", array[i]);
+
+        
+
+        Console.WriteLine();
+        Console.WriteLine();
+
+
+
+        //null : 동적할당을 하는 변수인데 힙이 없다고 말하는 변수
+        //object o2 = null;
+
+        //try
+        //{
+        //        throw new NullReferenceException();
+
+        //    int i2 = (int)o2;
+        //}        
+        //catch(NullReferenceException e)
+        //{
+        //    Console.WriteLine(e.Message);
+        //}
+        //catch(Exception e)
+        //{
+        //    Console.WriteLine(e.Message);
+        //}
+
+        //방법 1
+        //CalcDelegate Calc = new CalcDelegate(Add); 
+
+        //방법 2
+        //CalcDelegate Calc = Add;
+        //Calc(10, 20);
+        //Calc = Sub;
+        //Calc(10, 20);
+        //Calc += Add;
+        //Calc(100, 100);
+    }
+}

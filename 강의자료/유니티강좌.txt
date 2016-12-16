@@ -14,8 +14,6 @@ B형의 장점 오브젝트 생성에 대해 사운드에 관여할 필요가 없음.
 - 메모리의 낭비가 생김. Why? 
 오브젝트에 소리를 넣지 않음. 퍼즐, 런게임
 
-http://rgy0409.tistory.com/441 - sdk, jdk 설정
-
 
 http://xilfyhits.com/
 

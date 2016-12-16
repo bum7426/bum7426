@@ -1,0 +1,61 @@
+//* 클래스 연산자 오버로딩 : 클래스에서 연산자의 기능을 정의 또는 재정의 하는 것
+//  대입연산자(=)는 기본 제공
+//- 클래스   : 데이터와 관련기능을 모은 사용자정의 자료형
+//- 연산자   : 특정 기능을 수행하는 기호
+//- 오버로딩 : 여러 의미가 부여되는 것(프로그램적 견해 : 다기능)
+
+// 연산자 오버로딩 사용 이유
+//- 1. 수학이나 연산식에 대한 클래스를 제작했을 경우, 
+//  수학 공식들을 적용받는 경우에는 메소드를 아무리 만들어도 기호만큼의 의미를 부여하긴 힘듦.
+//- 2. 예전에 일반화 프로그래밍하는 경우, 이미 만들어진 일반화 프로그래밍이라던가 이미 만들어진 다른곳에 내것이 들어가게 하려고..
+
+namespace _11_23_클래스연산자오버로딩
+{
+    public class Complex
+    {
+        public float m_Real = 0;
+        public float m_Img = 0;
+
+        public Complex(float _Real = 0, float _Img = 0)
+        {
+            m_Real = _Real;
+            m_Img = _Img;
+        }
+
+        //_Left + _Right
+        public static Complex operator +(Complex _Left, Complex _Right)
+        {
+            return new Complex(_Left.m_Real + _Right.m_Real, _Left.m_Img + _Right.m_Img);
+        }
+        public static Complex operator -(Complex _Left, Complex _Right)
+        {
+            return new Complex(_Left.m_Real - _Right.m_Real, _Left.m_Img - _Right.m_Img);
+        }
+        public static Complex operator *(Complex _Left, Complex _Right)
+        {
+            return new Complex((_Left.m_Real * _Right.m_Real - _Left.m_Img * _Right.m_Img), (_Left.m_Real * _Right.m_Img + _Left.m_Img * _Right.m_Real));
+        }
+        public static Complex operator /(Complex _Left, Complex _Right)
+        {
+            float demon = (_Right.m_Real * _Right.m_Real) + (_Right.m_Img * _Right.m_Img);
+            return new Complex((_Left.m_Real * _Right.m_Real + _Left.m_Img * _Right.m_Img) / demon, (_Left.m_Real * _Right.m_Img * (-1) + _Left.m_Img * _Right.m_Real) / demon);
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} + {1}i", m_Real, m_Img);
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Complex A = new Complex(1, 2);
+            Complex B = new Complex(3, 4);
+
+            Complex C = A / B;
+            Console.WriteLine(C.ToString());
+        }
+    }
+}
