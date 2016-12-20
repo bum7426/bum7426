@@ -1,0 +1,13 @@
+559161761909-jh5khshrmpfcp97fok5h48j9rvjicqdb.apps.googleusercontent.com
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Google Play game services IDs.
+Save this file as res/values/games-ids.xml in your project.
+-->
+<resources>
+  <string name="app_id">559161761909</string>
+  <string name="package_name">com.KMK.Sample_GPGS</string>
+  <string name="achievement_start">CgkI9cCNhaMQEAIQAQ</string>
+</resources>
