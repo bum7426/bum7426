@@ -7,6 +7,7 @@ public class Enemy : CharManager
     NavMeshAgent navAgent;
 
     public float chasingRange;
+    public int damage;
     Vector3 OriginPos;
     Vector3 stopRange = new Vector3(1, 0, 1);
     bool block;
@@ -23,13 +24,13 @@ public class Enemy : CharManager
     {
         Attack();
         FollowPlayer();
-        Player.opponent = transform;
     }
 
-    //void OnMouseOver()
-    //{
-    //    Player.opponent = transform;
-    //}
+    void OnMouseEnter()
+    {
+        Player.opponent = transform;
+        Debug.Log("데헷");
+    }
 
     void FollowPlayer()
     {
@@ -70,5 +71,18 @@ public class Enemy : CharManager
         }
         return false;
     }
-    
+
+    void OnTriggerEnter(Collider order)
+    {
+        if (order.gameObject.tag == "Player")
+        {
+            Debug.Log("맞음");
+            if (health > 0)
+                health = health - Player.damage;
+            //else
+            //    Destroy(gameObject,0.5f);
+        }
+    }
+
+
 }

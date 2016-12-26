@@ -1,47 +1,81 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player : CharManager
+public class Player : PlayerManager
 {
     public static Transform opponent;
     public static Player player;
+    public static bool IsAttacking;    
+
     RaycastHit hit;
-
-    public Vector3 attackPos;
-
-    public GameObject attackRange;
     
-	void Awake ()
+    public GameObject attackSensor;
+    public Animator Anim;
+    
+
+    NavMeshAgent navAgent;
+
+    void Awake ()
     {
-        attackRange.SetActive(false);
+        Anim = GetComponentInChildren<Animator>();
+        navAgent = GetComponent<NavMeshAgent>();
+        attackSensor.SetActive(false);
         player = this;
-	}
+        IsAttacking = false;
+        damage = 15;
+
+    }
 	
 	void Update ()
     {
         Attack();
-	}
+        MobChk();
+        MoveChk();
+    }
 
     protected override void Attack()
-    {
-        if (opponent != null && Vector3.Distance(opponent.transform.position, transform.position)<range)
-        {            
-            if (Input.GetMouseButton(1))
-            {
-                Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity);
-                attackRange.SetActive(true);
-                attackPos = hit.point;// establish the point that we hit with the mouse
-                attackPos.y = transform.position.y;//use our height for the LOOKAT function, so we stay level and dont lean the character in weird angles
-                Vector3 attackDelta = attackPos - transform.position;//we need the Vector delta which is an un-normalized direction vector
-                attackPos = transform.position + attackDelta.normalized * 20.0f;
-                transform.LookAt(attackPos);
-                opponent.GetComponent<Enemy>().GetHit(damage);
-            }
-            else if(Input.GetMouseButtonUp(1))
-            {
-                attackRange.SetActive(false);
-            }                
+    {        
+        if (Input.GetMouseButtonUp(1))
+        {
+            //Vector3 pos = Input.mousePosition;
+            //pos.z = 10;
+            //Vector3 target = Camera.main.ScreenToWorldPoint(pos);
+            //transform.LookAt(target);
+            Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity);            
+            
+            transform.LookAt(hit.point);
+            Anim.SetTrigger("Use");            
+            Anim.SetBool("Idling", true);            
+            IsAttacking = true;
+            Debug.Log("공격");            
+        }
+        else
+        {
+            IsAttacking = false;
         }        
     }
 
+    void MoveChk()
+    {
+        if(IsAttacking)
+        {            
+            navAgent.enabled = false;
+        }
+        else
+        {
+            navAgent.enabled = true;
+        }
+    }
+
+    void MobChk()
+    {
+        if(IsAttacking)
+        {
+            attackSensor.SetActive(true);
+        }
+        else
+        {
+            attackSensor.SetActive(false);
+        }
+    }
 }
