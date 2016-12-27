@@ -6,3 +6,4 @@ bin
 Assembly-CSharp.csproj
 Library
 *.apk
+*.csproj

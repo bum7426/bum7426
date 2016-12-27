@@ -1,0 +1,28 @@
+필수 요소
+
+1. 환경 설정창
+소리 	- on / off	A형
+	- Volume	B형
+--------------------------
+
+프리팹의 정보를 바꾸면됨. - A형
+
+프리팹을 건드리는 것이 가장 효과적.
+
+B형의 장점 오브젝트 생성에 대해 사운드에 관여할 필요가 없음.
+내부코드의 스크립트에 이미 다 구현되어 있음.
+- 메모리의 낭비가 생김. Why? 
+오브젝트에 소리를 넣지 않음. 퍼즐, 런게임
+
+
+http://xilfyhits.com/
+
+Lamid Kim
+
+Naman Jain
+
+http://blog.naver.com/PostView.nhn?blogId=sorani81&logNo=150152192076&parentCategoryNo=&categoryNo=58&viewDate=&isShowPopularPosts=true&from=search
+
+http://blog.naver.com/PostView.nhn?blogId=gold_metal&logNo=220526236275&parentCategoryNo=&categoryNo=5&viewDate=&isShowPopularPosts=true&from=search
+
+phiru.tistory.com/322

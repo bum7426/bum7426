@@ -1,0 +1,21 @@
+
+        float h = Input.GetAxis("Horizontal");
+        transform.Rotate(0, h * Time.deltaTime * m_RotPower, 0);
+
+        float v = Input.GetAxis("Vertical");
+        transform.position += v * transform.forward * m_MovePower * Time.deltaTime;
+
+
+        
+
+      /*  if (Input.GetButtonDown("Jump"))
+        {
+            jp = true;
+        }
+
+        if (!jp) return;
+
+        Rigidbody rigid = gameObject.GetComponent<Rigidbody>();
+        rigid.AddForce(transform.up * m_JumpPower, ForceMode.Impulse);
+        jp = false;
+	*/

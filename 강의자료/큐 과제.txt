@@ -1,0 +1,215 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace queue //선형큐
+{
+    // 삽입은 큐의 후단, 삭제는 큐의 전단
+    // rear가 배열의 끝에 닿아있으면 
+    // 앞에 배열의 빈부분이 남아있어도 더이상 삽입연산을 하지 못함.
+    class Queue
+    {
+        private int front;
+        private int rear;
+        private int Q_size;
+        public int[] T_Queue;
+
+        public Queue(int _size)
+        {
+            Q_size = _size;
+            front = 0;
+            rear = -1;
+            T_Queue = new int[Q_size];
+        }
+
+        public bool empty()
+        {
+            return (front == rear + 1);
+        }
+
+        public bool full()
+        {
+            return (rear == Q_size - 1);
+        }
+
+        public void enqueue(int _value)
+        {
+            if (full())
+            {
+                Console.WriteLine("Queue is full");
+            }
+            T_Queue[++rear] = _value;
+        }
+
+        public void dequeue()
+        {
+            if (empty())
+            {
+                Console.WriteLine("Queue is empty");
+            }
+            else
+            {
+                front++;
+            }
+        }
+
+        public void Output()
+        {
+            if (!empty())
+            {
+                for (int i = front; i <= rear; i++)
+                {
+                    Console.Write(T_Queue[i] + "\t");
+                }
+                Console.WriteLine();
+            }
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Queue Test = new Queue(5);
+
+            for (int i = 0; i < 5; i++)
+            {
+                Test.enqueue(i);
+                Console.WriteLine("{0} 삽입 ", i);
+                Test.Output();
+            }
+
+            Console.WriteLine();
+            for (int i = 0; i < 5; i++)
+            {
+                Test.dequeue();
+                Console.WriteLine("{0} 삭제 ", i);
+                Test.Output();
+            }
+        }
+    }
+}
+
+
+
+
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace queue
+{
+    // 삽입은 큐의 후단, 삭제는 큐의 전단
+    // rear가 배열의 끝에 닿아있으면 
+    // 앞에 배열의 빈부분이 남아있어도 더이상 삽입연산을 하지 못함.
+    class Queue
+    {
+        private int front;
+        private int rear;
+        private int Q_size;
+        public int[] T_Queue;
+
+        public Queue(int _size)
+        {
+            Q_size = _size;
+            front = 0;
+            rear = 0;
+            T_Queue = new int[Q_size];
+        }
+
+        public bool empty()
+        {
+            return (front == rear);
+        }
+
+        public bool full()
+        {
+            return (front == (rear+1)%Q_size);
+        }
+
+        public void enqueue(int _value)
+        {
+            if (full())
+            {
+                Console.WriteLine("Queue is full");
+                rear = Q_size - 1;
+                Console.WriteLine("front = " + front + "\trear : " + rear);
+                for (int i = 1; i <= rear; i++)
+                {
+                    Console.Write(T_Queue[i] + "\t");
+                }
+                Console.WriteLine("\n");
+            }
+            else
+            {
+                rear = (rear + 1) % Q_size;
+                T_Queue[rear] = _value;
+                Console.WriteLine(_value + " 삽입 ");
+                Console.WriteLine("front = " + front + "\trear : " + rear);
+                for (int i = 1; i <= rear; i++)
+                {
+                    Console.Write(T_Queue[i] + "\t");
+                }
+                Console.WriteLine("\n");
+            }
+        }
+
+        public void dequeue()
+        {
+            if (empty())
+            {
+                Console.WriteLine("Queue is empty");
+            }
+            else
+            {
+                front = (front + 1) % Q_size;
+                Console.WriteLine("삭제");
+                Console.WriteLine("front = " + front + "\t rear : " + rear);
+                for (int i = 1; i <= rear; i++)
+                {
+                    Console.Write(T_Queue[i] + "\t");
+                }
+                Console.WriteLine("\n");
+                
+            }
+        }
+
+        public void Output()
+        {
+            if (!empty())
+            {
+                for (int i = (front +1) % Q_size ; i <= rear; i++)
+                {
+                    Console.Write(T_Queue[i] + "\t");
+                }
+                Console.WriteLine();
+            }
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Queue Test = new Queue(8);
+
+            Test.enqueue(0);
+            Test.enqueue(1);
+            Test.enqueue(2);
+            Test.enqueue(3);
+            Test.enqueue(4);
+            Test.enqueue(5);
+            Test.dequeue();
+            Test.enqueue(10);
+            Test.enqueue(11);
+         
+
+
+
+
+        }
+    }
+}
+
+
