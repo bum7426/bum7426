@@ -3,79 +3,148 @@ using System.Collections;
 
 public class Player : PlayerManager
 {
-    public static Transform opponent;
+    public static Transform oppenent;    
     public static Player player;
-    public static bool IsAttacking;    
+    public Transform Cam;
+
+    public bool IsAttacking;
+    public bool IsMove;
+    public bool IsDied;
 
     RaycastHit hit;
-    
-    public GameObject attackSensor;
-    public Animator Anim;
-    
-
     NavMeshAgent navAgent;
+
+    public GameObject attackSensor;
+    public Animator Anim; 
 
     void Awake ()
     {
-        Anim = GetComponentInChildren<Animator>();
+        InitAnimator();
         navAgent = GetComponent<NavMeshAgent>();
         attackSensor.SetActive(false);
         player = this;
         IsAttacking = false;
+        IsMove = false;
+        IsDied = false;
         damage = 15;
-
     }
-	
+
 	void Update ()
     {
         Attack();
-        MobChk();
+        Move();
+        Animate();
         MoveChk();
+        if (HP <= 0 && !IsDied)
+        {
+            Death();
+        }
+
+        if (EnemyFSM.PlayerHit)
+        {
+            Invoke("IsHit", 0.3f);
+            Invoke("MotionDelay", 0.5f);
+        }
+        Debug.Log(EnemyFSM.PlayerHit);
     }
 
-    protected override void Attack()
-    {        
-        if (Input.GetMouseButtonUp(1))
+    void InitAnimator()
+    {
+        Anim.SetInteger("WeaponState", 4);
+        Anim.SetBool("Idling", true);
+        Anim = GetComponentInChildren<Animator>();
+    }
+
+    void MotionDelay()
+    {
+        IsMove = false;
+        IsAttacking = false;
+    }
+
+    void Move()
+    {
+        if (Input.GetMouseButton(0))
         {
-            //Vector3 pos = Input.mousePosition;
-            //pos.z = 10;
-            //Vector3 target = Camera.main.ScreenToWorldPoint(pos);
-            //transform.LookAt(target);
-            Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity);            
-            
-            transform.LookAt(hit.point);
-            Anim.SetTrigger("Use");            
-            Anim.SetBool("Idling", true);            
-            IsAttacking = true;
-            Debug.Log("공격");            
+            Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, (1 << 8) | (1 << 9));
+            navAgent.SetDestination(hit.point);
+            Anim.SetBool("Idling", false);
+
+            IsMove = true;
+        }
+    }
+
+    void Animate()
+    {
+        if (!IsAttacking)
+        {
+            if (navAgent.velocity.magnitude > 0.5f)
+            {
+                Anim.SetBool("Idling", false);
+            }
+            else
+            {
+                Anim.SetBool("Idling", true);
+            }
+        }
+    }
+
+    void Attack()
+    {        
+        if (Input.GetMouseButtonDown(1))
+        {
+            if(!IsAttacking)
+            {
+                IsAttacking = true;
+
+                if(oppenent != null)
+                {
+                    transform.LookAt(oppenent.position);
+                }
+                //Cam.GetComponent<CameraShaking>().StartShaking();
+                attackSensor.SetActive(true);
+                Anim.SetTrigger("Use");
+                Anim.SetBool("Idling", true);
+
+                Invoke("IsAttack", attackSpeed);
+                Debug.Log("공격");
+            }
         }
         else
         {
-            IsAttacking = false;
+            attackSensor.SetActive(false);            
         }        
     }
 
-    void MoveChk()
+    void IsAttack()
     {
-        if(IsAttacking)
-        {            
-            navAgent.enabled = false;
-        }
-        else
-        {
-            navAgent.enabled = true;
-        }
+        IsAttacking = false;
     }
 
-    void MobChk()
-    {
-        if(IsAttacking)
+    void MoveChk()
+    {        
+        if (IsAttacking)
         {
-            attackSensor.SetActive(true);
+            Anim.SetBool("Idling", true);
+            navAgent.Stop();            
         }
         else
         {
-            attackSensor.SetActive(false);
-        }
+            navAgent.Resume();
+        }     
+    }
+
+    void IsHit()
+    {
+        Anim.CrossFade("Dual.Pain", 0);
+        Anim.SetTime(0);
+        Cam.GetComponent<CameraShaking>().StartShaking();
+        IsAttacking = true;
+        Invoke("IsAttack", 1f);
+    }
+
+    void Death()
+    {
+        Anim.SetInteger("Death", 1);
+        IsAttacking = true;
     }
 }

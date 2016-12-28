@@ -25,40 +25,39 @@ public class ClickToMove : MonoBehaviour
 	void Update ()
     {
         Move();
-        Animate();
+        //Animate();
     }
 
     void Move()
     {
         if (Input.GetMouseButton(0))
         {
+            if(Input.GetMouseButton(0) && Input.GetMouseButtonDown(1))
+            {
+                Debug.Log("둘다 눌림");
+            }
             Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, (1 << 8) | (1 << 9));
-            navAgent.SetDestination(hit.point);            
-            Anim.SetBool("Idling", false);
-            Player.IsAttacking = false;
+            navAgent.SetDestination(hit.point);
+            Anim.SetBool("Idling", false);            
+
             IsMove = true;
-        }
-        else
-        {
-            IsMove = false;
-            Anim.SetBool("Idling", true);
         }
     }
 
-    void Animate()
-    {
-        if(!Player.IsAttacking)
-        {
-            if (navAgent.velocity.magnitude > 0.5f)
-            {
-                Anim.SetBool("Idling", false);
-            }
-            else
-            {
-                Anim.SetBool("Idling", true);
-            }
-        }        
-    }
+    //void Animate()
+    //{
+    //    if(!Player.IsAttacking)
+    //    {
+    //        if (navAgent.velocity.magnitude > 0.5f)
+    //        {
+    //            Anim.SetBool("Idling", false);
+    //        }
+    //        else
+    //        {
+    //            Anim.SetBool("Idling", true);
+    //        }
+    //    }
+    //}
 
 }
         
